@@ -1,0 +1,14 @@
+{
+  "questions": [
+    {
+      "id": "q1",
+      "question": "Theo nội dung video đến phút 2:23, lý do chính khiến người trẻ ngại kết hôn là gì?",
+      "options": [
+        "Áp lực tài chính và chi phí sinh hoạt",
+        "Thiếu thời gian cho gia đình",
+        "Không còn quan tâm đến hôn nhân"
+      ],
+      "correctIndex": 0
+    }
+  ]
+}
