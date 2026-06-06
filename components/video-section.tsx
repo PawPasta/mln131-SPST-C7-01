@@ -233,13 +233,38 @@ export function VideoSection({ title }: VideoSectionProps) {
         </div>
       </div>
 
-      <div className="bg-accent/10 border border-accent/30 rounded-xl p-8 space-y-3">
-        <h3 className="font-bold text-lg text-foreground">Kết luận</h3>
-        <p className="text-base leading-relaxed text-foreground/80">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor
-          incididunt ut labore et dolore magna aliqua, nhấn mạnh ý nghĩa của{' '}
-          <strong>kết hôn</strong> và vai trò của <em>gia đình</em> trong đời sống hiện đại.
-        </p>
+      <div className="relative overflow-hidden rounded-2xl border border-slate-200/80 bg-gradient-to-br from-slate-50 to-white p-8 md:p-10 shadow-sm">
+        <div className="absolute left-0 top-0 h-full w-1.5 bg-primary" />
+
+        <div className="max-w-prose pl-4">
+          <span className="inline-flex items-center rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-primary">
+            Tổng kết Podcast
+          </span>
+
+          <h3 className="mt-4 text-2xl font-bold tracking-tight text-slate-900">
+            Kết luận
+          </h3>
+
+          <p className="mt-5 text-[17px] leading-8 text-slate-600">
+            Từ những chia sẻ trong tập Podcast hôm nay, có thể thấy người trẻ không còn
+            xem <span className="font-semibold text-slate-900">kết hôn</span> là đích
+            đến bắt buộc mà là một quyết định cần sự chuẩn bị về tài chính, tâm lý và
+            trách nhiệm. Đây cũng là biểu hiện của sự biến đổi giá trị gia đình trong
+            xã hội hiện đại.
+          </p>
+
+          <p className="mt-4 text-[17px] leading-8 text-slate-600">
+            Dù quan niệm về hôn nhân thay đổi,
+            <span className="font-semibold text-slate-900"> gia đình </span>
+            vẫn giữ vai trò quan trọng trong việc nuôi dưỡng, giáo dục và tạo nền tảng
+            tinh thần cho mỗi cá nhân. Điều quan trọng không phải là kết hôn sớm hay
+            muộn, mà là sự sẵn sàng để xây dựng một
+            <span className="font-semibold italic text-primary">
+              {" "}
+              gia đình hạnh phúc và bền vững
+            </span>.
+          </p>
+        </div>
       </div>
     </div>
   );
