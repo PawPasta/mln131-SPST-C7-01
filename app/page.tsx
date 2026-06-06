@@ -152,7 +152,9 @@ const functionItems = [
   }
 ];
 
-const developmentRadialNodes = [
+import { RadialNode } from "@/components/radial-map";
+
+const developmentRadialNodes: RadialNode[] = [
   {
     position: 'top',
     title: <strong>Cơ sở hình thành gia đình hiện đại</strong>,

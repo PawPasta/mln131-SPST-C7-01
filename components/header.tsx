@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 
 export function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
+  const [activeSection, setActiveSection] = useState<string>('');
 
   useEffect(() => {
     const handleScroll = () => {
@@ -12,6 +13,30 @@ export function Header() {
 
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  useEffect(() => {
+    const sections = document.querySelectorAll('section[id]');
+    
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setActiveSection(entry.target.id);
+          }
+        });
+      },
+      {
+        rootMargin: '-20% 0px -60% 0px',
+        threshold: 0
+      }
+    );
+
+    sections.forEach((section) => observer.observe(section));
+
+    return () => {
+      sections.forEach((section) => observer.unobserve(section));
+    };
   }, []);
 
   return (
@@ -39,25 +64,33 @@ export function Header() {
           <nav className="hidden md:flex gap-3">
             <a
               href="#concept"
-              className="rounded-full px-3 py-1.5 text-sm font-medium text-foreground transition-all duration-300 hover:bg-primary/10 hover:text-primary hover:-translate-y-0.5"
+              className={`rounded-full px-3 py-1.5 text-sm font-medium transition-all duration-300 hover:bg-primary/10 hover:text-primary hover:-translate-y-0.5 ${
+                activeSection === 'concept' ? 'bg-primary/10 text-primary' : 'text-foreground'
+              }`}
             >
               I. Khái niệm
             </a>
             <a
               href="#position"
-              className="rounded-full px-3 py-1.5 text-sm font-medium text-foreground transition-all duration-300 hover:bg-primary/10 hover:text-primary hover:-translate-y-0.5"
+              className={`rounded-full px-3 py-1.5 text-sm font-medium transition-all duration-300 hover:bg-primary/10 hover:text-primary hover:-translate-y-0.5 ${
+                activeSection === 'position' ? 'bg-primary/10 text-primary' : 'text-foreground'
+              }`}
             >
               II. Vị trí
             </a>
             <a
               href="#functions"
-              className="rounded-full px-3 py-1.5 text-sm font-medium text-foreground transition-all duration-300 hover:bg-primary/10 hover:text-primary hover:-translate-y-0.5"
+              className={`rounded-full px-3 py-1.5 text-sm font-medium transition-all duration-300 hover:bg-primary/10 hover:text-primary hover:-translate-y-0.5 ${
+                activeSection === 'functions' ? 'bg-primary/10 text-primary' : 'text-foreground'
+              }`}
             >
               III. Chức năng
             </a>
             <a
               href="#development"
-              className="rounded-full px-3 py-1.5 text-sm font-medium text-foreground transition-all duration-300 hover:bg-primary/10 hover:text-primary hover:-translate-y-0.5"
+              className={`rounded-full px-3 py-1.5 text-sm font-medium transition-all duration-300 hover:bg-primary/10 hover:text-primary hover:-translate-y-0.5 ${
+                activeSection === 'development' ? 'bg-primary/10 text-primary' : 'text-foreground'
+              }`}
             >
               IV. Phát triển
             </a>

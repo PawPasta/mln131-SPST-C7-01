@@ -71,20 +71,30 @@ export function VideoSection({ title }: VideoSectionProps) {
   );
   const videoId =
     urlMatch?.[1] || process.env.NEXT_PUBLIC_YOUTUBE_VIDEO_ID || 'dQw4w9WgXcQ';
-  const stopAt = useMemo(
-    () => parseTimeToSeconds(process.env.NEXT_PUBLIC_YOUTUBE_QUIZ_STOP),
-    []
-  );
-  const quizQuestion = (quizData.questions?.[0] ?? null) as VideoQuizQuestion | null;
+    
+  const questions = useMemo(() => {
+    return (quizData.questions || []).map((q: any) => {
+      let rawTime = q.time;
+      if (q.envKey === 'NEXT_PUBLIC_YOUTUBE_QUIZ_STOP_1' && process.env.NEXT_PUBLIC_YOUTUBE_QUIZ_STOP_1) {
+        rawTime = process.env.NEXT_PUBLIC_YOUTUBE_QUIZ_STOP_1;
+      } else if (q.envKey === 'NEXT_PUBLIC_YOUTUBE_QUIZ_STOP_2' && process.env.NEXT_PUBLIC_YOUTUBE_QUIZ_STOP_2) {
+        rawTime = process.env.NEXT_PUBLIC_YOUTUBE_QUIZ_STOP_2;
+      }
+      return {
+        ...q,
+        stopAt: parseTimeToSeconds(rawTime)
+      };
+    }).filter((q: any) => q.stopAt !== null).sort((a: any, b: any) => a.stopAt - b.stopAt);
+  }, []);
 
   type YouTubePlayer = InstanceType<NonNullable<Window['YT']>['Player']>;
 
   const playerContainerRef = useRef<HTMLDivElement | null>(null);
   const playerRef = useRef<YouTubePlayer | null>(null);
-  const hasTriggeredRef = useRef(false);
+  const answeredQuestionsRef = useRef<Set<string>>(new Set());
   const intervalRef = useRef<number | null>(null);
 
-  const [showQuiz, setShowQuiz] = useState(false);
+  const [activeQuestion, setActiveQuestion] = useState<any | null>(null);
   const [selectedOption, setSelectedOption] = useState<number | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
@@ -92,22 +102,31 @@ export function VideoSection({ title }: VideoSectionProps) {
     if (!playerContainerRef.current) return;
 
     let isMounted = true;
-    hasTriggeredRef.current = false;
-    setShowQuiz(false);
+    setActiveQuestion(null);
     setSelectedOption(null);
     setErrorMessage(null);
 
     const startTracking = () => {
-      if (!stopAt || !quizQuestion) return;
+      if (!questions.length) return;
       if (intervalRef.current) return;
       intervalRef.current = window.setInterval(() => {
-        if (!playerRef.current || hasTriggeredRef.current) return;
-        const currentTime = playerRef.current.getCurrentTime();
-        if (currentTime >= stopAt) {
-          hasTriggeredRef.current = true;
-          playerRef.current.pauseVideo();
-          setShowQuiz(true);
-        }
+        if (!playerRef.current) return;
+        
+        // Prevent showing next question if one is already active
+        setActiveQuestion((currentActive: any) => {
+          if (currentActive) return currentActive;
+          
+          const currentTime = playerRef.current!.getCurrentTime();
+          const nextQuestion = questions.find(
+            (q: any) => !answeredQuestionsRef.current.has(q.id) && currentTime >= q.stopAt
+          );
+
+          if (nextQuestion) {
+            playerRef.current!.pauseVideo();
+            return nextQuestion;
+          }
+          return null;
+        });
       }, 500);
     };
 
@@ -155,19 +174,23 @@ export function VideoSection({ title }: VideoSectionProps) {
         playerRef.current = null;
       }
     };
-  }, [videoId, stopAt, quizQuestion]);
+  }, [videoId, questions]);
 
   const handleContinue = () => {
     if (selectedOption === null) {
       setErrorMessage('Vui lòng chọn đáp án để tiếp tục.');
       return;
     }
-    if (quizQuestion?.correctIndex !== undefined && selectedOption !== quizQuestion.correctIndex) {
+    if (activeQuestion?.correctIndex !== undefined && selectedOption !== activeQuestion.correctIndex) {
       setErrorMessage('Đáp án chưa đúng. Vui lòng thử lại.');
       return;
     }
     setErrorMessage(null);
-    setShowQuiz(false);
+    if (activeQuestion) {
+      answeredQuestionsRef.current.add(activeQuestion.id);
+    }
+    setActiveQuestion(null);
+    setSelectedOption(null); // Reset selection for the next question
     playerRef.current?.playVideo();
   };
 
@@ -180,7 +203,7 @@ export function VideoSection({ title }: VideoSectionProps) {
       <div className="bg-card rounded-2xl border border-border overflow-hidden shadow-lg">
         <div className="relative aspect-video rounded-t-2xl overflow-hidden bg-black">
           <div ref={playerContainerRef} className="h-full w-full" />
-          {showQuiz && quizQuestion ? (
+          {activeQuestion ? (
             <div className="absolute inset-0 z-10 flex items-center justify-center bg-background/90 px-4 py-6 backdrop-blur-sm">
               <div className="w-full max-w-2xl rounded-2xl border border-border bg-card p-6 shadow-lg">
                 <div className="space-y-4">
@@ -189,13 +212,13 @@ export function VideoSection({ title }: VideoSectionProps) {
                       Câu hỏi nhanh
                     </p>
                     <h3 className="mt-2 text-xl font-semibold text-foreground">
-                      {quizQuestion.question}
+                      {activeQuestion.question}
                     </h3>
                   </div>
                   <div className="space-y-3">
-                    {quizQuestion.options.map((option, optionIndex) => (
+                    {activeQuestion.options.map((option: string, optionIndex: number) => (
                       <label
-                        key={option}
+                        key={optionIndex}
                         className={`flex cursor-pointer items-start gap-3 rounded-xl border px-4 py-3 transition-all ${
                           selectedOption === optionIndex
                             ? 'border-primary bg-primary/10'
@@ -204,7 +227,7 @@ export function VideoSection({ title }: VideoSectionProps) {
                       >
                         <input
                           type="radio"
-                          name={`quiz-${quizQuestion.id}`}
+                          name={`quiz-${activeQuestion.id}`}
                           checked={selectedOption === optionIndex}
                           onChange={() => {
                             setSelectedOption(optionIndex);

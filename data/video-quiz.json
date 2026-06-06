@@ -2,13 +2,29 @@
   "questions": [
     {
       "id": "q1",
-      "question": "Theo nội dung video đến phút 2:23, lý do chính khiến người trẻ ngại kết hôn là gì?",
+      "envKey": "NEXT_PUBLIC_YOUTUBE_QUIZ_STOP_1",
+      "time": "03:15",
+      "question": "Theo nội dung thảo luận, lý do quan trọng nhất khiến nhiều bạn trẻ Gen Z hiện nay trì hoãn việc kết hôn là gì?",
       "options": [
-        "Áp lực tài chính và chi phí sinh hoạt",
-        "Thiếu thời gian cho gia đình",
-        "Không còn quan tâm đến hôn nhân"
+        "A. Họ không còn tin vào tình yêu đích thực.",
+        "B. Muốn ưu tiên sự nghiệp và ổn định tài chính cá nhân trước.",
+        "C. Do ảnh hưởng của các bộ phim tâm lý tiêu cực.",
+        "D. Họ muốn sống độc thân suốt đời."
       ],
-      "correctIndex": 0
+      "correctIndex": 1
+    },
+    {
+      "id": "q2",
+      "envKey": "NEXT_PUBLIC_YOUTUBE_QUIZ_STOP_2",
+      "time": "05:15",
+      "question": "Quan điểm của người trẻ về việc nuôi dạy con cái được nhắc đến trong clip là gì?",
+      "options": [
+        "A. Nuôi con là việc của ông bà, cha mẹ chỉ cần đi làm.",
+        "B. Có con càng sớm càng tốt để ổn định cuộc sống.",
+        "C. Ngại kết hôn vì sợ không đủ khả năng tạo ra môi trường giáo dục và phát triển tốt nhất cho con.",
+        "D. Không muốn có con vì tốn thời gian đi du lịch."
+      ],
+      "correctIndex": 2
     }
   ]
 }

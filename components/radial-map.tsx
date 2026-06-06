@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 
-interface RadialNode {
+export interface RadialNode {
   title: ReactNode;
   items?: ReactNode[];
   position: 'top' | 'right' | 'bottom' | 'left';
