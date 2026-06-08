@@ -95,6 +95,12 @@ export function Header() {
               IV. Phát triển
             </a>
           </nav>
+          <button
+            onClick={() => window.print()}
+            className="no-print inline-flex items-center gap-1.5 rounded-full bg-primary px-4 py-1.5 text-xs font-semibold text-primary-foreground shadow-md transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5 cursor-pointer"
+          >
+            🖨️ In / PDF
+          </button>
         </div>
       </div>
     </header>
