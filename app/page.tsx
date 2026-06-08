@@ -803,11 +803,10 @@ export default function Home() {
       <div className="fixed bottom-6 right-6 z-50 no-print">
         <button
           onClick={() => window.print()}
-          className="flex items-center gap-2 rounded-full bg-primary text-primary-foreground px-5 py-3 shadow-2xl hover:shadow-primary/20 hover:scale-105 active:scale-95 transition-all duration-300 font-semibold cursor-pointer group"
+          className="flex items-center justify-center w-14 h-14 rounded-full bg-primary text-primary-foreground shadow-2xl hover:shadow-primary/30 hover:scale-105 active:scale-95 transition-all duration-300 cursor-pointer group"
           title="Xuất bài thuyết trình sang PDF"
         >
-          <span className="text-xl group-hover:rotate-12 transition-transform duration-300">🖨️</span>
-          <span>Tải Slide PDF</span>
+          <span className="text-2xl group-hover:rotate-12 transition-transform duration-300">🖨️</span>
         </button>
       </div>
     </main>
